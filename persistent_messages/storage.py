@@ -1,11 +1,16 @@
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.messages.storage.fallback import FallbackStorage
-from django.utils.timezone import now
 from django.db.models import Q
 from django.conf import settings
 
 from persistent_messages.models import Message
 from persistent_messages.constants import PERSISTENT_MESSAGE_LEVELS
+
+try:
+    from django.utils.timezone import now
+except ImportError:
+    from datetime import datetime
+    now = datetime.now
 
 
 def get_user(request):
