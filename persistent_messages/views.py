@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404, render_to_response
 from django.template import RequestContext
 from django.core.exceptions import PermissionDenied
 
+
 def message_detail(request, message_id):
     user = get_user(request)
     if not user.is_authenticated():
@@ -14,7 +15,7 @@ def message_detail(request, message_id):
     message.read = True
     message.save()
 
-    return render_to_response('persistent_messages/message/detail.html', {'message': message}, 
+    return render_to_response('persistent_messages/message/detail.html', {'message': message},
         context_instance=RequestContext(request))
 
 

@@ -1,7 +1,5 @@
 import datetime
 
-from django.contrib import messages 
-from django.contrib.messages.storage.base import BaseStorage
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.messages.storage.fallback import FallbackStorage
 from django.db.models import Q
@@ -19,12 +17,13 @@ def get_user(request):
 
 """
 Messages need a primary key when being displayed so that they can be closed/marked as read by the user.
-Hence, they need to be stored when being added. You can disable this, but then you'll only be able to 
-close a message when it is displayed for the second time. 
+Hence, they need to be stored when being added. You can disable this, but then you'll only be able to
+close a message when it is displayed for the second time.
 """
 STORE_WHEN_ADDING = True
 
-#TODO: USE FALLBACK 
+
+#TODO: USE FALLBACK
 class PersistentMessageStorage(FallbackStorage):
     def __init__(self, *args, **kwargs):
         """
@@ -47,10 +46,10 @@ class PersistentMessageStorage(FallbackStorage):
         if exclude_read is None:
             # By default read messages are not excluded, we show all messages
             exclude_read = getattr(settings, 'EXCLUDE_READ', False)
-        
+
         if exclude_read:
             qs = qs.exclude(read=True)
-        
+
         return qs
 
     def _get(self, *args, **kwargs):
@@ -108,7 +107,7 @@ class PersistentMessageStorage(FallbackStorage):
         Counts persistent unread messages
         """
         return self.get_persistent_unread().count()
-        
+
     def count_nonpersistent(self):
         """
         Counts nonpersistent messages
@@ -145,7 +144,7 @@ class PersistentMessageStorage(FallbackStorage):
         if is_anonymous:
             return super(PersistentMessageStorage, self)._prepare_messages(messages)
         pass
-        
+
     def _store(self, messages, response, *args, **kwargs):
         """
         Stores a list of messages, returning a list of any messages which could
@@ -186,7 +185,7 @@ class PersistentMessageStorage(FallbackStorage):
         :param level: Level of the message
         :param message: Message text to be saved
         :param extra_tags: String with separated tags to add to message Ex: "secret classified"
-        :param subject: Subject of the message 
+        :param subject: Subject of the message
         :param user: `auth.User` that receives the message
         :param from_user: `auth.User` that sends the message
         :param expires: Timestamp that indicates when the message expires
@@ -209,7 +208,7 @@ class PersistentMessageStorage(FallbackStorage):
             return
 
         # Add the message
-        message = Message(user=to_user, level=level, message=message, extra_tags=extra_tags, subject=subject, 
+        message = Message(user=to_user, level=level, message=message, extra_tags=extra_tags, subject=subject,
             from_user=from_user, expires=expires, close_timeout=close_timeout)
 
         # Messages need a primary key when being displayed so that they can be closed/marked as read by the user.
