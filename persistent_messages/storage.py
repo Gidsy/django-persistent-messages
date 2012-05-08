@@ -1,7 +1,6 @@
-import datetime
-
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.messages.storage.fallback import FallbackStorage
+from django.utils.timezone import now
 from django.db.models import Q
 from django.conf import settings
 
@@ -40,7 +39,7 @@ class PersistentMessageStorage(FallbackStorage):
         """
         Gets the messages from the model. If `exclude_unread` is set to True, read messages are excluded
         """
-        qs = Message.objects.filter(user=get_user(self.request)).filter(Q(expires=None) | Q(expires__gt=datetime.datetime.now()))
+        qs = Message.objects.filter(user=get_user(self.request)).filter(Q(expires=None) | Q(expires__gt=now()))
 
         # If the function didn't get an exclude_read argument, we look for it in settings
         if exclude_read is None:
